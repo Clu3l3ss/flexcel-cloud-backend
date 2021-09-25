@@ -11,14 +11,23 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 #db.create_all() Create only on first run
 
+
 class FlowModel(db.Model):
+<<<<<<< HEAD
 	id = db.Column(db.String(100), primary_key=True)
 	flow = db.Column(db.String(100), nullable=False)
+=======
+    id = db.Column(db.Integer, primary_key=True)
+    flow = db.Column(MutableList.as_mutable(
+        PickleType), default=[], nullable=False)
 
-	def __repr__(self):
-		return f"Flow(ID = {id})"
+    def __repr__(self):
+        return f"Flow(ID = {id})"
+>>>>>>> ed6cec63be64c6fee411d649e0bd65a1bd9d1d4d
+
 
 flow_put_args = reqparse.RequestParser()
+<<<<<<< HEAD
 flow_put_args.add_argument("flow", type=str, help="Flow is required", required=True)
 
 flow_update_args = reqparse.RequestParser()
@@ -31,15 +40,30 @@ resource_fields = {
 
 #try abort? 36
 #statuses
+=======
+flow_put_args.add_argument(
+    "flow", type=list, help="Flow is required", required=True)
+
+flow_update_args = reqparse.RequestParser()
+flow_update_args.add_argument(
+    "flow", type=list, help="Flow is required", required=True)
+
+resource_fields = {
+    'id': fields.Integer,
+    'flow': fields.List,
+}
+
+>>>>>>> ed6cec63be64c6fee411d649e0bd65a1bd9d1d4d
 
 class Flowdata(Resource):
-	@marshal_with(resource_fields)
-	def get(self, flow_id):
-		result = FlowModel.query.filter_by(id=flow_id).first()
-		if not result:
-			abort(404, message="Could not find your flow.")
-		return result
+    @marshal_with(resource_fields)
+    def get(self, flow_id):
+        result = FlowModel.query.filter_by(id=flow_id).first()
+        if not result:
+            abort(404, message="Could not find your flow.")
+        return result
 
+<<<<<<< HEAD
 	@marshal_with(resource_fields)
 	def put(self, flow_id):
 		args = flow_put_args.parse_args()
@@ -71,8 +95,35 @@ class Flowdata(Resource):
 		db.session.delete(flow)
 		db.session.commit()
 		return flow, 201
+=======
+    @marshal_with(resource_fields)
+    def put(self, flow_id):
+        args = flow_put_args.parse_args()
+        result = FlowModel.query.filter_by(id=flow_id).first()
+        if result:
+            abort(409, message="Flow already stored.")
+
+        flow = FlowModel(id=flow_id, flow=args['flow'])
+        db.session.add(flow)
+        db.session.commit()
+        return flow, 201
+
+    @marshal_with(resource_fields)
+    def patch(self, flow_id):
+        args = flow_update_args.parse_args()
+        result = FlowModel.query.filter_by(id=flow_id).first()
+        if not result:
+            abort(404, message="Flow doesn't exist, cannot update.")
+
+        if args['flow']:
+            result.flow = args['flow']
+
+        db.session.commit()
+
+        return result
+>>>>>>> ed6cec63be64c6fee411d649e0bd65a1bd9d1d4d
 
 api.add_resource(Flowdata, "/flow/<string:user_id>")
 
 if __name__ == "__main__":
-	app.run(debug=True)
+    app.run(debug=True)
