@@ -1,6 +1,6 @@
 import requests
 
-BASE = 'http://127.0.0.1:5000/'
+BASE = 'http://3.231.167.221:5000/'
 
 response = requests.put(BASE + 'storage/3', {'type' : 'flow', 'value' : {'TEST' : 'TEST'}})
 print(response.json())
