@@ -64,7 +64,7 @@ def storage(user_id):
                 pass
         with open(PATH, 'w') as json_file:
             json.dump(args['value'], json_file)
-        return '', 200
+        return {"TEST" : "000"}, 200
 
 #api.add_resource(storage, "/storage/<int:user_id>")
 
