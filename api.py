@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, request, render_template
 from flask_restful import Api, Resource, reqparse, abort
 import os
 import json
@@ -12,14 +12,14 @@ stor_put_args = reqparse.RequestParser()
 stor_put_args.add_argument("type", type=str, help="Please specify the type of data.")
 stor_put_args.add_argument("value")
 
-class Storage(Resource):
-    def get(self, user_id):
-        args = stor_put_args.parse_args()
-        PATH = path + str(user_id) + "/" + args['type'] + '.json'
-        if os.path.isfile(PATH) == False:
-            abort(404, message="Could not find data.")
-        with open(PATH) as f:
-            return json.load(f), 200
+#class Storage(Resource):
+    #def get(self, user_id):
+        #args = stor_put_args.parse_args()
+        #PATH = path + str(user_id) + "/" + args['type'] + '.json'
+        #if os.path.isfile(PATH) == False:
+            #abort(404, message="Could not find data.")
+        #with open(PATH) as f:
+            #return json.load(f), 200
     #def delete(self, user_id):
     #    args = stor_put_args.parse_args()
     #    PATH = path + str(user_id) + "/" + args['type'] + '.json'
@@ -27,7 +27,32 @@ class Storage(Resource):
     #        abort(404, message="Could not find data.")
     #    os.remove(PATH)
     #    return '', 200
-    def put(self, user_id):
+    #def put(self, user_id):
+        #args = stor_put_args.parse_args()
+        #PATH = path + str(user_id) + "/" + args['type'] + '.json'
+        #if os.path.exists('storage') == False:
+            #os.mkdir('storage')
+        #if os.path.exists(path + str(user_id)) == False:
+            #os.mkdir(path + str(user_id))
+        #if os.path.isfile(PATH) == False:
+            #with open(PATH, 'w') as fp:
+                #pass
+        #with open(PATH, 'w') as json_file:
+            #json.dump(args['value'], json_file)
+        #return '', 200
+
+@app.route('/storage/<int:user_id>', methods=['GET', 'PUT'])
+def storage(user_id):
+    # GET request
+    if request.method == 'GET':
+        args = stor_put_args.parse_args()
+        PATH = path + str(user_id) + "/" + args['type'] + '.json'
+        if os.path.isfile(PATH) == False:
+            abort(404, message="Could not find data.")
+        with open(PATH) as f:
+            return json.load(f), 200
+    # PUT request
+    if request.method == 'PUT':
         args = stor_put_args.parse_args()
         PATH = path + str(user_id) + "/" + args['type'] + '.json'
         if os.path.exists('storage') == False:
@@ -41,7 +66,7 @@ class Storage(Resource):
             json.dump(args['value'], json_file)
         return '', 200
 
-api.add_resource(Storage, "/storage/<int:user_id>")
+#api.add_resource(Storage, "/storage/<int:user_id>")
 
 if __name__ == "__main__":
     app.run()
