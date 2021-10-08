@@ -8,9 +8,9 @@ path = 'storage/'
 app = Flask(__name__)
 api = Api(app)
 
-stor_put_args = reqparse.RequestParser()
-stor_put_args.add_argument("type", type=str, help="Please specify the type of data.")
-stor_put_args.add_argument("value")
+#stor_put_args = reqparse.RequestParser()
+#stor_put_args.add_argument("type", type=str, help="Please specify the type of data.")
+#stor_put_args.add_argument("value")
 
 #class Storage(Resource):
     #def get(self, user_id):
@@ -45,7 +45,7 @@ stor_put_args.add_argument("value")
 def storage(user_id):
     # GET request
     if request.method == 'GET':
-        args = stor_put_args.parse_args()
+        args = request.get_json()
         PATH = path + str(user_id) + "/" + args['type'] + '.json'
         if os.path.isfile(PATH) == False:
             abort(404, message="Could not find data.")
@@ -53,7 +53,7 @@ def storage(user_id):
             return json.load(f), 200
     # PUT request
     if request.method == 'PUT':
-        args = stor_put_args.parse_args()
+        args = request.get_json()
         PATH = path + str(user_id) + "/" + args['type'] + '.json'
         if os.path.exists('storage') == False:
             os.mkdir('storage')
