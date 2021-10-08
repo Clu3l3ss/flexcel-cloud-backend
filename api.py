@@ -66,7 +66,7 @@ def storage(user_id):
             json.dump(args['value'], json_file)
         return '', 200
 
-#api.add_resource(Storage, "/storage/<int:user_id>")
+api.add_resource(storage, "/storage/<int:user_id>")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
