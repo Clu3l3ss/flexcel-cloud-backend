@@ -6,7 +6,7 @@ import json
 path = 'storage/'
 
 app = Flask(__name__)
-api = Api(app)
+#api = Api(app)
 
 #stor_put_args = reqparse.RequestParser()
 #stor_put_args.add_argument("type", type=str, help="Please specify the type of data.")
@@ -66,7 +66,7 @@ def storage(user_id):
             json.dump(args['value'], json_file)
         return '', 200
 
-api.add_resource(storage, "/storage/<int:user_id>")
+#api.add_resource(storage, "/storage/<int:user_id>")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
