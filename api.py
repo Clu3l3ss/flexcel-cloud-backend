@@ -41,12 +41,12 @@ app = Flask(__name__)
             #json.dump(args['value'], json_file)
         #return '', 200
 
-@app.route('/storage/<int:user_id>', methods=['GET', 'PUT'])
+@app.route('/storage/<string:user_id>', methods=['GET', 'PUT'])
 def storage(user_id):
     # GET request
     if request.method == 'GET':
         args = request.args.get('type')
-        PATH = path + str(user_id) + "/" + args + '.json'
+        PATH = path + user_id + "/" + args + '.json'
         if os.path.isfile(PATH) == False:
             abort(404, message="Could not find data.")
         with open(PATH) as f:
@@ -54,11 +54,11 @@ def storage(user_id):
     # PUT request
     if request.method == 'PUT':
         args = request.get_json()
-        PATH = path + str(user_id) + "/" + args['type'] + '.json'
+        PATH = path + user_id + "/" + args['type'] + '.json'
         if os.path.exists('storage') == False:
             os.mkdir('storage')
-        if os.path.exists(path + str(user_id)) == False:
-            os.mkdir(path + str(user_id))
+        if os.path.exists(path + user_id) == False:
+            os.mkdir(path + user_id)
         if os.path.isfile(PATH) == False:
             with open(PATH, 'w') as fp:
                 pass
@@ -66,7 +66,7 @@ def storage(user_id):
             json.dump(args['value'], json_file)
         return {"TEST" : "000"}, 200
 
-#api.add_resource(storage, "/storage/<int:user_id>")
+#api.add_resource(storage, "/storage/<string:user_id>")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
