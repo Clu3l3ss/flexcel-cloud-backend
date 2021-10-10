@@ -45,8 +45,8 @@ app = Flask(__name__)
 def storage(user_id):
     # GET request
     if request.method == 'GET':
-        args = request.get_json()
-        PATH = path + str(user_id) + "/" + args['type'] + '.json'
+        args = request.args.get('type')
+        PATH = path + str(user_id) + "/" + args + '.json'
         if os.path.isfile(PATH) == False:
             abort(404, message="Could not find data.")
         with open(PATH) as f:
